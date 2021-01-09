@@ -1,11 +1,11 @@
 export class Food {
-    public id:string
+    public id:number
     public name:string
-    public course: Array<string>
+    public courses: Array<string>
     public cuisines:Array<string>
     public ingredients:Array<string>
     public imageURL: string
-    public totalTime:string
+    public totalTime:number
     public recipeURL: string
-    public rating:string
+    public rating:number
 }

@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="row">
+      <div class="col-md-4" *ngFor="let food of AllFoods">
+        <div class="card">
+          <img class="card-img-top" [src]="food.imageURL" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">{{food.name}}</h5>            
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">cuisines: {{food.cuisines}}</li>
+              <li class="list-group-item">courses: {{food.courses}}</li>
+              <li class="list-group-item">num of ingredients: {{food.ingredients.length}}</li>
+              <li class="list-group-item">Time: {{getTime(food.totalTime)}}</li>
+            </ul>
+            <a href="#" class="btn btn-primary">Go</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
