@@ -1,1 +1,14 @@
-<p>food works!</p>
+<div class="jumbotron text-center">
+    <img [src]="food.imageURL">
+    <h1 ><b>{{food.name}}</b></h1>
+</div>
+<div class="body">
+    <h5>Cuisines :    {{food.cuisines}}</h5>
+    <h5>Courses : {{food.courses}}</h5>
+    <h5>Total Time : {{food.totalTime}}</h5>
+    <h5>Rating : {{food.rating}}</h5>
+    <h5>Recipe : {{food.recipeURL}}</h5>
+    <div *ngFor="let ingredient of food.ingredients; let i =index" [attr.data-index]="i">
+        <p> ingredient {{i}}  :  {{ingredient}}</p>
+    </div>
+</div>

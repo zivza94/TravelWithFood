@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Food } from '../DTO/food';
+import { SharedDataService } from '../Services/shared-data.service';
 
 @Component({
   selector: 'app-food',
@@ -6,10 +9,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./food.component.css']
 })
 export class FoodComponent implements OnInit {
-
-  constructor() { }
+  food:Food
+  name =""
+  constructor(private sharedDataService:SharedDataService, private router:Router) { }
 
   ngOnInit(): void {
+    this.sharedDataService.changeChange(false)
+    this.sharedDataService.currentFood.subscribe(
+      food => {
+        this.food = food
+        this.name = food.name
+      }
+    )
   }
+
+  getImage():string{
+    return this.food.imageURL
+  }
+
 
 }

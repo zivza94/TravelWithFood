@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import {Food} from '../DTO/food'
 import { GetServiceService } from '../Services/get-service.service';
 import { SharedDataService } from '../Services/shared-data.service';
@@ -23,51 +24,70 @@ export class FoodResultsComponent implements OnInit {
   rating:Number = 0
   isBackDisabled = true
   isNextDisabled = true
-
+  inComp = false
+  subscriptions:Array<Subscription> = new Array<Subscription>()
   constructor(private sharedDataService:SharedDataService,private getService:GetServiceService,private router:Router) { }
 
   ngOnInit(): void {
-    this.getFoodList()
+    this.subscriptions.push(this.sharedDataService.currentChange.subscribe(
+      change => {
+          if (change){
+            this.getFoodList()
+          }else{
+          this.subscriptions.push(this.sharedDataService.currentFoodList.subscribe(
+            foods => this.updateFoods(foods)
+          ))
+          }        
+      }
+    )
+    )
+    
+    // this.getFoodList()
+  }
+  ngOnDestroy():void {
+    this.subscriptions.forEach( subscription => subscription.unsubscribe())
   }
 
   getFoodList(){
-    this.sharedDataService.currentCourse.subscribe(
+    this.subscriptions.push(this.sharedDataService.currentCourse.subscribe(
       course => this.course = course
-    )
-    this.sharedDataService.currentCuisine.subscribe(
+    ))
+    this.subscriptions.push(this.sharedDataService.currentCuisine.subscribe(
       cuisine => this.cuisine = cuisine
-    )
-    this.sharedDataService.currentIngredients.subscribe(
+    ))
+    this.subscriptions.push(this.sharedDataService.currentIngredients.subscribe(
       ingredients => this.ingredients = ingredients
-    )
-    this.sharedDataService.currentIngredientsDiscard.subscribe(
+    ))
+    this.subscriptions.push(this.sharedDataService.currentIngredientsDiscard.subscribe(
       ingredientsDiscard => this.ingredientsDiscard = ingredientsDiscard
-    )
-    this.sharedDataService.currentMaxIngredient.subscribe(
+    ))
+    this.subscriptions.push(this.sharedDataService.currentMaxIngredient.subscribe(
       maxIng => this.maxIngredients = maxIng
-    )
-    this.sharedDataService.currentMaxTime.subscribe(
+    ))
+    this.subscriptions.push(this.sharedDataService.currentMaxTime.subscribe(
       maxTime => this.maxTime = maxTime
-    )
-    this.sharedDataService.currentRating.subscribe(
+    ))
+    this.subscriptions.push(this.sharedDataService.currentRating.subscribe(
       rating => this.rating = rating
-    )
+    ))
     
-    this.getService.onGetFoods.subscribe(
+    this.subscriptions.push(this.getService.onGetFoods.subscribe(
       foods => {
-        this.foods = foods
-        this.start = 0
-        this.end = this.foods.length >= this.viewsForWindow ?this.viewsForWindow : this.foods.length
-        this.FoodsView = this.foods.slice(this.start,this.end)
-        if(this.end < this.foods.length){
-          this.isNextDisabled = false
-        }
-        
+        this.updateFoods(foods)
+        this.sharedDataService.changeFoodList(this.foods)
       }
-    )
+    ))
     this.getService.getFoods(this.cuisine,this.ingredients,this.ingredientsDiscard,this.course,this.maxTime,this.rating,this.maxIngredients)
   }
-
+  updateFoods(foods){
+    this.foods = foods
+    this.start = 0
+    this.end = this.foods.length >= this.viewsForWindow ?this.viewsForWindow : this.foods.length
+    this.FoodsView = this.foods.slice(this.start,this.end)
+    if(this.end < this.foods.length){
+      this.isNextDisabled = false
+    }
+  }
   getdetails(food:Food){
     var details = ""
     details += "courses: " +food.courses + "<br>"

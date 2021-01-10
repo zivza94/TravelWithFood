@@ -18,6 +18,12 @@ export class IngredientsChooseComponent implements OnInit {
   options = []
   ingredients = ["salt","pepper","onion","oil","macha"] 
   cuisine:string
+  limitAdd=false
+  limitRemove = false
+  errormsg = "can't add more then 5 ingredient to list"
+  errorMsgAdd=""
+  errorMsgRemove=""
+
 
   constructor(private router:Router,private sharedDataService:SharedDataService) { }
 
@@ -36,12 +42,28 @@ export class IngredientsChooseComponent implements OnInit {
   }
   onAdd(want:boolean){
     if (want){
-      this.ingredientList.push(this.ingredientName)
-      this.toAdd.nativeElement.value = ""
+      if(this.limitAdd){
+        this.errorMsgAdd = this.errormsg
+      }
+      else{
+        this.ingredientList.push(this.ingredientName)
+        this.toAdd.nativeElement.value = ""
+        if (this.ingredientList.length == 5){
+          this.limitAdd = true
+        }
+      }
       
     } else {
-      this.ingredientListRemove.push(this.ingredientName)
-      this.toRemove.nativeElement.value = ""
+      if(this.limitRemove){
+        this.errorMsgRemove = this.errormsg
+      }else{
+        this.ingredientListRemove.push(this.ingredientName)
+        this.toRemove.nativeElement.value = ""
+        if (this.ingredientListRemove.length == 5){
+          this.limitRemove = true
+        }
+      }
+      
     } 
   }
 

@@ -21,6 +21,9 @@
         </div>
     </div>
     <div class="row">
+        <p style="color: red;">{{errorMsgAdd}}</p>
+    </div> 
+    <div class="row">
         <label *ngFor="let i of ingredientList">
             {{i}},&nbsp;
         </label>
@@ -50,6 +53,9 @@
             <button (click)="onAdd(false)"> Add</button>
         </div>
     </div>
+    <div class="row">
+        <p style="color: red;">{{errorMsgRemove}}</p>
+    </div> 
     <div class="row">
         <label *ngFor="let i of ingredientListRemove">
             {{i}},&nbsp;
