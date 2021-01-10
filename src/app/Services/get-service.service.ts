@@ -61,18 +61,20 @@ export class GetServiceService {
     this.httpClient.post("api/Main/GetFoods",request).subscribe(
       data => this.ResponseSubjects["GetFoods"].next(data)
     )*/
-
-    var food1 = new Food()
-    food1.courses = ["dinner"]
-    food1.cuisines = ["Asian"]
-    food1.imageURL="https://media-cdn.tripadvisor.com/media/photo-s/15/b9/52/3e/sushi-maki-mix.jpg"
-    food1.ingredients = ["salt","pepper","fish","sea"]
-    food1.name = "sushi"
-    food1.rating = 4
-    food1.recipeURL = "no recipe"
-    food1.totalTime = 180
-    var foods = [food1]
+    var foods = new Array<Food>()
+    
+    for (var i=0; i<80;i++){
+      var food1 = new Food()
+      food1.courses = ["dinner"]
+      food1.cuisines = ["Asian"]
+      food1.imageURL="https://media-cdn.tripadvisor.com/media/photo-s/15/b9/52/3e/sushi-maki-mix.jpg"
+      food1.ingredients = ["salt","pepper","fish","sea"]
+      food1.name = "sushi " + i
+      food1.rating = 4
+      food1.recipeURL = "no recipe"
+      food1.totalTime = 180
+      foods.push(food1)
+    }
     this.ResponseSubjects["GetFoods"].next(foods)
-
   }
 }

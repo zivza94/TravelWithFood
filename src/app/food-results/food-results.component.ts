@@ -9,8 +9,11 @@ import { SharedDataService } from '../Services/shared-data.service';
   styleUrls: ['./food-results.component.css']
 })
 export class FoodResultsComponent implements OnInit {
+  viewsForWindow = 50
   foods:Array<Food>
-  AllFoods:Array<Food>
+  FoodsView:Array<Food>
+  start:number
+  end:number
   course = ""
   cuisine = ""
   ingredients =[]
@@ -18,6 +21,8 @@ export class FoodResultsComponent implements OnInit {
   maxIngredients:Number = -1
   maxTime:Number = -1
   rating:Number = 0
+  isBackDisabled = true
+  isNextDisabled = true
 
   constructor(private sharedDataService:SharedDataService,private getService:GetServiceService,private router:Router) { }
 
@@ -51,7 +56,13 @@ export class FoodResultsComponent implements OnInit {
     this.getService.onGetFoods.subscribe(
       foods => {
         this.foods = foods
-        this.AllFoods = this.foods.slice(0,this.foods.length >= 50 ?50 : this.foods.length)
+        this.start = 0
+        this.end = this.foods.length >= this.viewsForWindow ?this.viewsForWindow : this.foods.length
+        this.FoodsView = this.foods.slice(this.start,this.end)
+        if(this.end < this.foods.length){
+          this.isNextDisabled = false
+        }
+        
       }
     )
     this.getService.getFoods(this.cuisine,this.ingredients,this.ingredientsDiscard,this.course,this.maxTime,this.rating,this.maxIngredients)
@@ -73,5 +84,27 @@ export class FoodResultsComponent implements OnInit {
     this.sharedDataService.changeFood(food)
     this.router.navigate(["food"])
   }
+  updateFoodsView(start:number,end:number){
+    this.FoodsView = this.foods.slice(this.start,this.end)
+  }
+  back(){
+    this.start = this.start-this.viewsForWindow
+    this.end = this.start + this.viewsForWindow
+    this.updateFoodsView(this.start,this.end)
+    if(this.start == 0){
+      this.isBackDisabled = true
+    }
+    this.isNextDisabled = false
+  }
+  next(){
+    this.start = this.start + this.viewsForWindow
+    this.end = (this.end +this.viewsForWindow)<= this.foods.length ? this.end +this.viewsForWindow : this.foods.length
+    this.updateFoodsView(this.start,this.end)
+    if(this.end == this.foods.length){
+      this.isNextDisabled = true
+    }
+    this.isBackDisabled = false
+  }
+  
 
 }
