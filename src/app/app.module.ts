@@ -16,6 +16,7 @@ import { IngredientsChooseComponent } from './ingredients-choose/ingredients-cho
 import { CookingGoalsComponent } from './cooking-goals/cooking-goals.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FoodResultsComponent } from './food-results/food-results.component';
+import { FoodComponent } from './food/food.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { FoodResultsComponent } from './food-results/food-results.component';
     HomeComponent,
     IngredientsChooseComponent,
     CookingGoalsComponent,
-    FoodResultsComponent
+    FoodResultsComponent,
+    FoodComponent
   ],
   imports: [
     BrowserModule,

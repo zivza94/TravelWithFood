@@ -11,7 +11,7 @@
               <li class="list-group-item">num of ingredients: {{food.ingredients.length}}</li>
               <li class="list-group-item">Time: {{getTime(food.totalTime)}}</li>
             </ul>
-            <a href="#" class="btn btn-primary">Go</a>
+            <button class="btn btn-primary" (click)="selectFood(food)">GO to Food</button>
           </div>
         </div>
       </div>

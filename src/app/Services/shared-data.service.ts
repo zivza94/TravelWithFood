@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { Food } from '../DTO/food';
 
 @Injectable({
   providedIn: 'root'
@@ -42,5 +43,11 @@ export class SharedDataService {
   currentMaxIngredient = this.maxIngredientSource.asObservable()
   changeMaxIngredient( maxIngredient: Number) {
     this.maxIngredientSource.next( maxIngredient)
+  }
+
+  private foodSource = new BehaviorSubject<Food>(undefined)
+  currentFood = this.foodSource.asObservable()
+  changeFood( food: Food) {
+    this.foodSource.next( food)
   }
 }

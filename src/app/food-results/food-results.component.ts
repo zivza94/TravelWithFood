@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import {Food} from '../DTO/food'
 import { GetServiceService } from '../Services/get-service.service';
 import { SharedDataService } from '../Services/shared-data.service';
@@ -18,7 +19,7 @@ export class FoodResultsComponent implements OnInit {
   maxTime:Number = -1
   rating:Number = 0
 
-  constructor(private sharedDataService:SharedDataService,private getService:GetServiceService) { }
+  constructor(private sharedDataService:SharedDataService,private getService:GetServiceService,private router:Router) { }
 
   ngOnInit(): void {
     this.getFoodList()
@@ -66,6 +67,11 @@ export class FoodResultsComponent implements OnInit {
   }
   getTime(totalTime){
     return  "Time: " + Math.floor(totalTime/60) + " h " + Math.floor(totalTime%60) + " m"
+  }
+
+  selectFood(food:Food){
+    this.sharedDataService.changeFood(food)
+    this.router.navigate(["food"])
   }
 
 }
