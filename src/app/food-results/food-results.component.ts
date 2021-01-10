@@ -97,7 +97,7 @@ export class FoodResultsComponent implements OnInit {
     return details
   }
   getTime(totalTime){
-    return  "Time: " + Math.floor(totalTime/60) + " h " + Math.floor(totalTime%60) + " m"
+    return  Math.floor(totalTime/60) + " h " + Math.floor(totalTime%60) + " m"
   }
 
   selectFood(food:Food){
