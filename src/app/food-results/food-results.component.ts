@@ -12,7 +12,7 @@ import { SharedDataService } from '../Services/shared-data.service';
 })
 export class FoodResultsComponent implements OnInit {
   viewsForWindow = 50
-  foods:Array<Food>
+  foods:Array<Food> = new Array<Food>()
   FoodsView:Array<Food>
   start:number
   end:number

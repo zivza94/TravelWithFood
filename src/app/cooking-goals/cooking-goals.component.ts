@@ -23,6 +23,7 @@ export class CookingGoalsComponent implements OnInit {
   options = []
   selectedIngredients = []
   errorMessage = ""
+  ratingErrorMessage =""
   isDisabled = false
   subscriptions:Array<Subscription> = new Array<Subscription>()
 
@@ -54,25 +55,33 @@ export class CookingGoalsComponent implements OnInit {
         break
       }
       case "rating":{
-        if(+event.target.value == 0){
-          this.rating = -1
+        if (+event.target.value>5){
+          this.ratingErrorMessage = "The Max rating is 5"
+          this.isDisabled = true
         }else{
-          this.rating = +event.target.value
+          this.ratingErrorMessage = ""
+          this.tryEnable()
+          if(+event.target.value == 0){
+            this.rating = -1
+          }else{
+            this.rating = +event.target.value
+          }
+           break
         }
-         break
+        
       }
       case "ingredient": {
         
         var max = +event.target.value
         var min = this.selectedIngredients.length
-        if (max > min || max == 0){
+        if (max >= min || max == 0){
           if (max == 0){
             this.maxIngredient = -1
           }else{
             this.maxIngredient = +event.target.value
           }
           this.errorMessage = ""
-          this.isDisabled = false
+          this.tryEnable()
         } else {
           this.errorMessage = " You choose "+ min +" min ingredients, please enter greater number or empty"
           this.isDisabled = true
@@ -84,6 +93,11 @@ export class CookingGoalsComponent implements OnInit {
     }
   }
 
+  tryEnable(){
+    if (this.errorMessage =="" && this.ratingErrorMessage==""){
+      this.isDisabled = false
+    }
+  }
   selectEvent(item) {
     this.course = item
   }
