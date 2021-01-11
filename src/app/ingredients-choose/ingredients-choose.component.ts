@@ -17,7 +17,6 @@ export class IngredientsChooseComponent implements OnInit {
   ingredientListRemove = new Array<string>()
   options = []
   ingredients = ["salt","pepper","onion","oil","macha"] 
-  cuisine:string
   limitAdd=false
   limitRemove = false
   errormsg = "can't add more then 5 ingredient to list"
@@ -28,7 +27,6 @@ export class IngredientsChooseComponent implements OnInit {
   constructor(private router:Router,private sharedDataService:SharedDataService) { }
 
   ngOnInit(): void {
-    this.sharedDataService.currentCuisine.subscribe( cuisine => this.cuisine=cuisine)
     this.options = this.ingredients
   }
   /*selectEvent(item) {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {Food} from '../DTO/food'
+import { AlertService } from '../Services/alert.service';
 import { GetServiceService } from '../Services/get-service.service';
 import { SharedDataService } from '../Services/shared-data.service';
 @Component({
@@ -19,14 +20,14 @@ export class FoodResultsComponent implements OnInit {
   cuisine = ""
   ingredients =[]
   ingredientsDiscard = []
-  maxIngredients:Number = -1
-  maxTime:Number = -1
-  rating:Number = 0
+  maxIngredients:Number = undefined
+  maxTime:Number= undefined
+  rating:Number= undefined
   isBackDisabled = true
   isNextDisabled = true
   inComp = false
   subscriptions:Array<Subscription> = new Array<Subscription>()
-  constructor(private sharedDataService:SharedDataService,private getService:GetServiceService,private router:Router) { }
+  constructor(private sharedDataService:SharedDataService,private getService:GetServiceService,private router:Router,private alertService:AlertService) { }
 
   ngOnInit(): void {
     this.subscriptions.push(this.sharedDataService.currentChange.subscribe(
@@ -41,9 +42,13 @@ export class FoodResultsComponent implements OnInit {
       }
     )
     )
+    this.subscriptions.push(this.getService.onAppResponseError.subscribe(
+      response => this.alertService.openModal("Travel With Food",response.message)
+    ))
     
     // this.getFoodList()
   }
+  
   ngOnDestroy():void {
     this.subscriptions.forEach( subscription => subscription.unsubscribe())
   }

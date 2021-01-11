@@ -6,6 +6,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -17,6 +18,7 @@ import { CookingGoalsComponent } from './cooking-goals/cooking-goals.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FoodResultsComponent } from './food-results/food-results.component';
 import { FoodComponent } from './food/food.component';
+import { AlertSystemComponent } from './alert-system/alert-system.component';
 
 
 @NgModule({
@@ -26,7 +28,8 @@ import { FoodComponent } from './food/food.component';
     IngredientsChooseComponent,
     CookingGoalsComponent,
     FoodResultsComponent,
-    FoodComponent
+    FoodComponent,
+    AlertSystemComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,9 @@ import { FoodComponent } from './food/food.component';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    AutocompleteLibModule
+    AutocompleteLibModule,
+    MatDialogModule
+    
   ],
   providers: [],
   bootstrap: [AppComponent]

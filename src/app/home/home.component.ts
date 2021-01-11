@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {SharedDataService} from '../Services/shared-data.service'
 import { GetServiceService} from '../Services/get-service.service'
+import { AlertService} from '../Services/alert.service'
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -14,41 +16,44 @@ export class HomeComponent implements OnInit {
   ingredintName = ""
   ingredientsList = ["salt and pepper","salt", "oil","onion"]
   options = []
+  subscriptions:Array<Subscription> = new Array<Subscription>()
 
-  constructor( private router:Router,private sharedDataService:SharedDataService,private getService:GetServiceService) { }
-  
+  constructor( private router:Router,private sharedDataService:SharedDataService,private getService:GetServiceService,private alertService:AlertService) { }
+  ngOnDestroy():void {
+    this.subscriptions.forEach( subscription => subscription.unsubscribe())
+  }
+
   ngOnInit(): void {
     this.getService.getCuisine()
-    this.getService.onGetCuisineResponse.subscribe(
+    this.subscriptions.push(this.getService.onGetCuisineResponse.subscribe(
       data => this.cuisines = data.cuisines
-    )
-    this.getService.getIngredients()
-    this.getService.onGetIngredientsResponse.subscribe(
-      ingredients => this.options = this.ingredientsList = ingredients
-    )
-    this.getService.onUpdateCuisineResponse.subscribe(
+    ))
+    this.subscriptions.push(this.getService.onGetIngredientsResponse.subscribe(
+      data => this.options = this.ingredientsList = data.ingredient
+    ))
+    this.subscriptions.push(this.getService.onUpdateCuisineResponse.subscribe(
       data => this.cuisines = data.cuisines
-    )
-    this.cuisines = ["asia","USA","france","dekel"]
-    this.options = this.ingredientsList
-    this.getService.onAppResponseError.subscribe(
-      response => console.log(response)
-    )
+    ))
+    //this.cuisines = ["asia","USA","france","dekel"]
+    //this.options = this.ingredientsList
+    this.subscriptions.push(this.getService.onAppResponseError.subscribe(
+      response => this.alertService.openModal("Travel With Food",response.message)
+    ))
   }
   selectEvent(item) {
     this.ingredintName = item
   }
   onChangeSearch(val: string) {
-    this.options = this.options.filter(value => value.toLowerCase().contain(val))
+    this.getService.getIngredients(val)
+    this.ingredintName = val
+    //this.options = this.options.filter(value => value.toLowerCase().contain(val))
   }
   updateCuisine(): void{
-    console.log(this.ingredintName)
     this.getService.getCuisineByIngredient(this.ingredintName)
   }
 
   onChooseCuisine(cuisine:string):void {
     this.sharedDataService.changeCuisine(cuisine)
-    console.log("cuisine" + cuisine + " has been choosen")
     this.router.navigate(["ingredientChoose"])
   }
 

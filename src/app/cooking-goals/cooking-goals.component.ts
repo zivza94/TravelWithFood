@@ -1,6 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AlertService } from '../Services/alert.service';
+import { GetServiceService } from '../Services/get-service.service';
 import { SharedDataService } from '../Services/shared-data.service';
 
 @Component({
@@ -10,25 +13,35 @@ import { SharedDataService } from '../Services/shared-data.service';
 })
 export class CookingGoalsComponent implements OnInit {
   @ViewChild('next') nextBtn
-  maxTime = 0
+  maxTime = -1
   min = 0
   hours = 0
-  rating = 0
+  rating = -1
   course = ""
-  maxIngredient = 0
-  courses =["dinner","lunch","wine"]
+  maxIngredient = undefined
+  courses:Array<string>
   options = []
   selectedIngredients = []
   errorMessage = ""
   isDisabled = false
-  //course:FormControl
-  constructor(private sharedDataService:SharedDataService,private router:Router) { }
+  subscriptions:Array<Subscription> = new Array<Subscription>()
 
+  //course:FormControl
+  constructor(private sharedDataService:SharedDataService,private router:Router,private getService:GetServiceService,private alertService:AlertService) { }
+  ngOnDestroy():void {
+    this.subscriptions.forEach( subscription => subscription.unsubscribe())
+  }
   ngOnInit(): void {
-    this.options = this.courses
-    this.sharedDataService.currentIngredients.subscribe(
+    this.subscriptions.push(this.sharedDataService.currentIngredients.subscribe(
       ingredients => this.selectedIngredients = ingredients
-    )
+    ))
+    this.getService.getCourses()
+    this.subscriptions.push(this.getService.onGetAllCourses.subscribe(
+      data => this.options = this.courses = data.courses
+    ))
+    this.subscriptions.push(this.getService.onAppResponseError.subscribe(
+      response => this.alertService.openModal("Travel With Food",response.message)
+    ))
   }
 
   onKey(event,value:string){
@@ -41,14 +54,23 @@ export class CookingGoalsComponent implements OnInit {
         break
       }
       case "rating":{
-         this.rating = +event.target.value
+        if(+event.target.value == 0){
+          this.rating = -1
+        }else{
+          this.rating = +event.target.value
+        }
          break
       }
       case "ingredient": {
+        
         var max = +event.target.value
         var min = this.selectedIngredients.length
         if (max > min || max == 0){
-          this.maxIngredient = +event.target.value
+          if (max == 0){
+            this.maxIngredient = -1
+          }else{
+            this.maxIngredient = +event.target.value
+          }
           this.errorMessage = ""
           this.isDisabled = false
         } else {
@@ -72,7 +94,8 @@ export class CookingGoalsComponent implements OnInit {
   
 
   next(){
-      this.maxTime = this.hours * 60 + this.min
+      var max = this.hours * 60 + this.min
+      this.maxTime = max==0?-1 : max
       this.sharedDataService.changeMaxIngredient(this.maxIngredient)
       this.sharedDataService.changeMaxTime(this.maxTime)
       this.sharedDataService.changeCourse(this.course)

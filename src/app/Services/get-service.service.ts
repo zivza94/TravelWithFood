@@ -8,17 +8,18 @@ import { Food } from '../DTO/food';
 })
 export class GetServiceService {
   ResponseSubjects: {[responseID:string]:Subject<any>} = {
-    GetCuisine : new Subject<any>(),
+    GetAllCuisines : new Subject<any>(),
     GetIngredients: new Subject<any>(),
     UpdateCuisine:new Subject<any>(),
     GetFoods:new Subject<any>(),
+    GetAllCourses:new Subject<any>(),
     AppResponseError:new Subject<any>()
 
   }
   constructor(private httpClient:HttpClient) { }
 
   get onGetCuisineResponse(){
-    return this.ResponseSubjects.GetCuisine
+    return this.ResponseSubjects.GetAllCuisines
   }
   get onGetIngredientsResponse(){
     return this.ResponseSubjects.GetIngredients
@@ -32,24 +33,65 @@ export class GetServiceService {
   get onAppResponseError(){
     return this.ResponseSubjects.AppResponseError
   }
+  get onGetAllCourses(){
+    return this.ResponseSubjects.GetAllCourses
+  }
   getCuisine(){
     this.httpClient.post("api/Main/GetAllCuisines",{}).subscribe(
-      data => this.ResponseSubjects["GetCuisine"].next(data)
-      )
+      (data:any) => {
+        if(data.ResponseType == "AppResponseError"){
+          this.ResponseSubjects["AppResponseError"].next(data)
+        }
+        else{
+          this.ResponseSubjects["GetAllCuisines"].next(data)
+        }
+      },
+      err => this.ResponseSubjects["AppResponseError"].next(err)
+      
+    )
   }
-  getIngredients(){
-    this.httpClient.post("api/Main/GetIngredients",{}).subscribe(
-      data => this.ResponseSubjects["GetIngredients"].next(data)
+  getCourses(){
+    this.httpClient.post("api/Main/GetAllCourses",{}).subscribe(
+      (data:any) => {
+        if(data.ResponseType == "AppResponseError"){
+          this.ResponseSubjects["AppResponseError"].next(data)
+        }
+        else{
+          this.ResponseSubjects["GetAllCourses"].next(data)
+        }
+      },
+      err => this.ResponseSubjects["AppResponseError"].next(err)
+    )
+  }
+  getIngredients(val:string){
+    this.httpClient.post("api/Main/GetIngredient",{"ingredient": val}).subscribe(
+      (data:any) => {
+        if(data.ResponseType == "AppResponseError"){
+          this.ResponseSubjects["AppResponseError"].next(data)
+        }
+        else{
+          this.ResponseSubjects["GetIngredients"].next(data)
+        }
+      },
+      err => this.ResponseSubjects["AppResponseError"].next(err)
     )
   }
   getCuisineByIngredient(ingredient:string){
     var request = { "Ingredient": ingredient}
     this.httpClient.post("api/Main/GetCuisineByIngredient",request).subscribe(
-      data => this.ResponseSubjects["UpdateCuisine"].next(data)
+      (data:any) => {
+        if(data.ResponseType == "AppResponseError"){
+          this.ResponseSubjects["AppResponseError"].next(data)
+        }
+        else{
+          this.ResponseSubjects["UpdateCuisine"].next(data)
+        }
+      },
+      err => this.ResponseSubjects["AppResponseError"].next(err)
     )
   }
   getFoods(cuisine:string,ingredients:Array<string>,discardIngredients:Array<string>,course:string,maxTime:Number,rating:Number,maxIngredient:Number){
-    /*var request = {
+    var request = {
       "Cuisine": cuisine,
       "Ingredients": ingredients,
       "WithoutIngredients":discardIngredients,
@@ -59,22 +101,30 @@ export class GetServiceService {
       "MaxIngredients":maxIngredient
     }
     this.httpClient.post("api/Main/GetFoods",request).subscribe(
-      data => this.ResponseSubjects["GetFoods"].next(data)
-    )*/
-    var foods = new Array<Food>()
+      (data:any) => {
+        if(data.ResponseType == "AppResponseError"){
+          this.ResponseSubjects["AppResponseError"].next(data)
+        }
+        else{
+          this.ResponseSubjects["GetFoods"].next(data)
+        }
+      },
+      err => this.ResponseSubjects["AppResponseError"].next(err)
+    )
+    // var foods = new Array<Food>()
     
-    for (var i=0; i<80;i++){
-      var food1 = new Food()
-      food1.courses = ["dinner"]
-      food1.cuisines = ["Asian"]
-      food1.imageURL="https://media-cdn.tripadvisor.com/media/photo-s/15/b9/52/3e/sushi-maki-mix.jpg"
-      food1.ingredients = ["salt","pepper","fish","sea"]
-      food1.name = "sushi " + i
-      food1.rating = 4
-      food1.recipeURL = "no recipe"
-      food1.totalTime = 180
-      foods.push(food1)
-    }
-    this.ResponseSubjects["GetFoods"].next(foods)
+    // for (var i=0; i<80;i++){
+    //   var food1 = new Food()
+    //   food1.courses = ["dinner"]
+    //   food1.cuisines = ["Asian"]
+    //   food1.imageURL="https://media-cdn.tripadvisor.com/media/photo-s/15/b9/52/3e/sushi-maki-mix.jpg"
+    //   food1.ingredients = ["salt","pepper","fish","sea"]
+    //   food1.name = "sushi " + i
+    //   food1.rating = 4
+    //   food1.recipeURL = "no recipe"
+    //   food1.totalTime = 180
+    //   foods.push(food1)
+    // }
+    // this.ResponseSubjects["GetFoods"].next(foods)
   }
 }
