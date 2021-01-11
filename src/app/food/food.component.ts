@@ -24,7 +24,7 @@ export class FoodComponent implements OnInit {
   }
 
   getImage():string{
-    return this.food.imageURL
+    return this.food.imageUrl
   }
 
 

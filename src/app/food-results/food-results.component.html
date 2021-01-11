@@ -15,7 +15,7 @@
       <div class="row">
         <div class="col-md-3" *ngFor="let food of FoodsView">
           <div class="card">
-            <img class="card-img-top" [src]="food.imageURL" alt="Card image cap">
+            <img class="card-img-top" [src]="food.imageUrl" alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title">{{food.name}}</h5>  
               <p> cuisines: {{food.cuisines}} <br> courses: {{food.courses}} <br> num of ingredients: {{food.ingredients.length}} <br> Time: {{getTime(food.totalTime)}}</p>

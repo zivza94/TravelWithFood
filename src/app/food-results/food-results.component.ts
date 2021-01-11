@@ -77,21 +77,26 @@ export class FoodResultsComponent implements OnInit {
     ))
     
     this.subscriptions.push(this.getService.onGetFoods.subscribe(
-      foods => {
-        this.updateFoods(foods)
+      data => {
+        this.updateFoods(data.foods)
         this.sharedDataService.changeFoodList(this.foods)
       }
     ))
     this.getService.getFoods(this.cuisine,this.ingredients,this.ingredientsDiscard,this.course,this.maxTime,this.rating,this.maxIngredients)
   }
   updateFoods(foods){
-    this.foods = foods
-    this.start = 0
-    this.end = this.foods.length >= this.viewsForWindow ?this.viewsForWindow : this.foods.length
-    this.FoodsView = this.foods.slice(this.start,this.end)
-    if(this.end < this.foods.length){
-      this.isNextDisabled = false
+    if(foods.length > 0){
+      this.foods = foods
+      this.start = 0
+      this.end = this.foods.length >= this.viewsForWindow ?this.viewsForWindow : this.foods.length
+      this.FoodsView = this.foods.slice(this.start,this.end)
+      if(this.end < this.foods.length){
+        this.isNextDisabled = false
+      }
+    }else {
+      this.alertService.openModal("Travel with Food","no results")
     }
+    
   }
   getdetails(food:Food){
     var details = ""

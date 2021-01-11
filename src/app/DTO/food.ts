@@ -4,8 +4,8 @@ export class Food {
     public courses: Array<string>
     public cuisines:Array<string>
     public ingredients:Array<string>
-    public imageURL: string
+    public imageUrl: string
     public totalTime:number
-    public recipeURL: string
+    public recipeUrl: string
     public rating:number
 }
