@@ -12,7 +12,7 @@ import { SharedDataService } from '../Services/shared-data.service';
 })
 export class FoodResultsComponent implements OnInit {
   viewsForWindow = 50
-  foods:Array<Food> = new Array<Food>()
+  foods:Array<Food> = []
   FoodsView:Array<Food>
   start:number
   end:number
@@ -107,6 +107,9 @@ export class FoodResultsComponent implements OnInit {
     return details
   }
   getTime(totalTime){
+    if (totalTime <=0){
+      return "unknown time"
+    }
     return  Math.floor(totalTime/60) + " h " + Math.floor(totalTime%60) + " m"
   }
 

@@ -7,6 +7,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
@@ -39,7 +40,8 @@ import { AlertSystemComponent } from './alert-system/alert-system.component';
     HttpClientModule,
     BrowserAnimationsModule,
     AutocompleteLibModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule
     
   ],
   providers: [],

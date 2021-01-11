@@ -9,7 +9,7 @@
             <br>
             <span style="font-size: 20px;">Courses: </span> <span style="font-size: 15px;">{{food.courses}}</span>
             <br>
-            <span style="font-size: 20px;">Total time: </span> <span style="font-size: 15px;">{{food.totalTime}}</span>
+            <span style="font-size: 20px;">Total time: </span> <span style="font-size: 15px;">{{getTime(food.totalTime)}}</span>
             <br>
             <span style="font-size: 20px;">Rating: </span> <span style="font-size: 15px;">{{food.rating}}</span>
             <br>
@@ -19,5 +19,6 @@
             </div>
             <a href="{{food.recipeUrl}}" class="card-link">Recipe</a>
         </div>
+        <button class="btn btn-secondary" (click)="back()">Back To All</button>
     </div>
 </div>

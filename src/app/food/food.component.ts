@@ -26,6 +26,16 @@ export class FoodComponent implements OnInit {
   getImage():string{
     return this.food.imageUrl
   }
+  back(){
+    this.router.navigate(["foods"])
+  }
+
+  getTime(totalTime){
+    if (totalTime <=0){
+      return "unknown time"
+    }
+    return  Math.floor(totalTime/60) + " h " + Math.floor(totalTime%60) + " m"
+  }
 
 
 }

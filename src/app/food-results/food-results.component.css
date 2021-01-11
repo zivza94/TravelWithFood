@@ -21,3 +21,7 @@ button {
     background-repeat: no-repeat;
     background-size: cover;
 }
+.load{
+    margin-left:50%;
+    margin-right:50%;
+}
