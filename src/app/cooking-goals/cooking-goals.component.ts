@@ -27,7 +27,6 @@ export class CookingGoalsComponent implements OnInit {
   isDisabled = false
   subscriptions:Array<Subscription> = new Array<Subscription>()
 
-  //course:FormControl
   constructor(private sharedDataService:SharedDataService,private router:Router,private getService:GetServiceService,private alertService:AlertService) { }
   ngOnDestroy():void {
     this.subscriptions.forEach( subscription => subscription.unsubscribe())
