@@ -3,19 +3,19 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AlertSystemComponent } from '../alert-system/alert-system.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AlertService {
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
-  openModal(title:string, message:string) {
+  openModal(title: string, message: string) {
     const dialogConfig = new MatDialogConfig();
 
     // dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.data = {
-        title: title,
-        message:message
+      title: title,
+      message: message,
     };
     dialogConfig.minWidth = 400;
 

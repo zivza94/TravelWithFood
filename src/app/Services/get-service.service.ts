@@ -1,118 +1,120 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { Food } from '../DTO/food';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GetServiceService {
-  ResponseSubjects: {[responseID:string]:Subject<any>} = {
-    GetAllCuisines : new Subject<any>(),
+  ResponseSubjects: { [responseID: string]: Subject<any> } = {
+    GetAllCuisines: new Subject<any>(),
     GetIngredients: new Subject<any>(),
-    UpdateCuisine:new Subject<any>(),
-    GetFoods:new Subject<any>(),
-    GetAllCourses:new Subject<any>(),
-    AppResponseError:new Subject<any>()
+    UpdateCuisine: new Subject<any>(),
+    GetFoods: new Subject<any>(),
+    GetAllCourses: new Subject<any>(),
+    AppResponseError: new Subject<any>(),
+  };
+  constructor(private httpClient: HttpClient) {}
 
+  get onGetCuisineResponse() {
+    return this.ResponseSubjects.GetAllCuisines;
   }
-  constructor(private httpClient:HttpClient) { }
-
-  get onGetCuisineResponse(){
-    return this.ResponseSubjects.GetAllCuisines
+  get onGetIngredientsResponse() {
+    return this.ResponseSubjects.GetIngredients;
   }
-  get onGetIngredientsResponse(){
-    return this.ResponseSubjects.GetIngredients
+  get onUpdateCuisineResponse() {
+    return this.ResponseSubjects.UpdateCuisine;
   }
-  get onUpdateCuisineResponse(){
-    return this.ResponseSubjects.UpdateCuisine
+  get onGetFoods() {
+    return this.ResponseSubjects.GetFoods;
   }
-  get onGetFoods(){
-    return this.ResponseSubjects.GetFoods
+  get onAppResponseError() {
+    return this.ResponseSubjects.AppResponseError;
   }
-  get onAppResponseError(){
-    return this.ResponseSubjects.AppResponseError
+  get onGetAllCourses() {
+    return this.ResponseSubjects.GetAllCourses;
   }
-  get onGetAllCourses(){
-    return this.ResponseSubjects.GetAllCourses
-  }
-  getCuisine(){
-    this.httpClient.post("api/Main/GetAllCuisines",{}).subscribe(
-      (data:any) => {
-        if(data.ResponseType == "AppResponseError"){
-          this.ResponseSubjects["AppResponseError"].next(data)
-        }
-        else{
-          this.ResponseSubjects["GetAllCuisines"].next(data)
+  getCuisine() {
+    this.httpClient.post('api/Main/GetAllCuisines', {}).subscribe(
+      (data: any) => {
+        if (data.ResponseType == 'AppResponseError') {
+          this.ResponseSubjects['AppResponseError'].next(data);
+        } else {
+          this.ResponseSubjects['GetAllCuisines'].next(data);
         }
       },
-      err => this.ResponseSubjects["AppResponseError"].next(err)
-      
-    )
+      (err) => this.ResponseSubjects['AppResponseError'].next(err)
+    );
   }
-  getCourses(){
-    this.httpClient.post("api/Main/GetAllCourses",{}).subscribe(
-      (data:any) => {
-        if(data.ResponseType == "AppResponseError"){
-          this.ResponseSubjects["AppResponseError"].next(data)
-        }
-        else{
-          this.ResponseSubjects["GetAllCourses"].next(data)
+  getCourses() {
+    this.httpClient.post('api/Main/GetAllCourses', {}).subscribe(
+      (data: any) => {
+        if (data.ResponseType == 'AppResponseError') {
+          this.ResponseSubjects['AppResponseError'].next(data);
+        } else {
+          this.ResponseSubjects['GetAllCourses'].next(data);
         }
       },
-      err => this.ResponseSubjects["AppResponseError"].next(err)
-    )
+      (err) => this.ResponseSubjects['AppResponseError'].next(err)
+    );
   }
-  getIngredients(val:string){
-    this.httpClient.post("api/Main/GetIngredient",{"ingredient": val}).subscribe(
-      (data:any) => {
-        if(data.ResponseType == "AppResponseError"){
-          this.ResponseSubjects["AppResponseError"].next(data)
-        }
-        else{
-          this.ResponseSubjects["GetIngredients"].next(data)
+  getIngredients(val: string) {
+    this.httpClient
+      .post('api/Main/GetIngredient', { ingredient: val })
+      .subscribe(
+        (data: any) => {
+          if (data.ResponseType == 'AppResponseError') {
+            this.ResponseSubjects['AppResponseError'].next(data);
+          } else {
+            this.ResponseSubjects['GetIngredients'].next(data);
+          }
+        },
+        (err) => this.ResponseSubjects['AppResponseError'].next(err)
+      );
+  }
+  getCuisineByIngredient(ingredient: string) {
+    var request = { Ingredient: ingredient };
+    this.httpClient.post('api/Main/GetCuisineByIngredient', request).subscribe(
+      (data: any) => {
+        if (data.ResponseType == 'AppResponseError') {
+          this.ResponseSubjects['AppResponseError'].next(data);
+        } else {
+          this.ResponseSubjects['UpdateCuisine'].next(data);
         }
       },
-      err => this.ResponseSubjects["AppResponseError"].next(err)
-    )
+      (err) => this.ResponseSubjects['AppResponseError'].next(err)
+    );
   }
-  getCuisineByIngredient(ingredient:string){
-    var request = { "Ingredient": ingredient}
-    this.httpClient.post("api/Main/GetCuisineByIngredient",request).subscribe(
-      (data:any) => {
-        if(data.ResponseType == "AppResponseError"){
-          this.ResponseSubjects["AppResponseError"].next(data)
-        }
-        else{
-          this.ResponseSubjects["UpdateCuisine"].next(data)
-        }
-      },
-      err => this.ResponseSubjects["AppResponseError"].next(err)
-    )
-  }
-  getFoods(cuisine:string,ingredients:Array<string>,discardIngredients:Array<string>,course:string,maxTime:Number,rating:Number,maxIngredient:Number){
+  getFoods(
+    cuisine: string,
+    ingredients: Array<string>,
+    discardIngredients: Array<string>,
+    course: string,
+    maxTime: Number,
+    rating: Number,
+    maxIngredient: Number
+  ) {
     var request = {
-      "Cuisine": cuisine,
-      "Ingredients": ingredients,
-      "WithoutIngredients":discardIngredients,
-      "Course":course,
-      "MaxTime":maxTime,
-      "Rating":rating,
-      "MaxIngredients":maxIngredient
-    }
-    this.httpClient.post("api/Main/GetFoods",request).subscribe(
-      (data:any) => {
-        if(data.ResponseType == "AppResponseError"){
-          this.ResponseSubjects["AppResponseError"].next(data)
-        }
-        else{
-          this.ResponseSubjects["GetFoods"].next(data)
+      Cuisine: cuisine,
+      Ingredients: ingredients,
+      WithoutIngredients: discardIngredients,
+      Course: course,
+      MaxTime: maxTime,
+      Rating: rating,
+      MaxIngredients: maxIngredient,
+    };
+    this.httpClient.post('api/Main/GetFoods', request).subscribe(
+      (data: any) => {
+        if (data.ResponseType == 'AppResponseError') {
+          this.ResponseSubjects['AppResponseError'].next(data);
+        } else {
+          this.ResponseSubjects['GetFoods'].next(data);
         }
       },
-      err => this.ResponseSubjects["AppResponseError"].next(err)
-    )
+      (err) => this.ResponseSubjects['AppResponseError'].next(err)
+    );
     // var foods = new Array<Food>()
-    
+
     // for (var i=0; i<80;i++){
     //   var food1 = new Food()
     //   food1.courses = ["dinner"]

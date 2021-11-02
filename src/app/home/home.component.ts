@@ -1,61 +1,32 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import {SharedDataService} from '../Services/shared-data.service'
-import { GetServiceService} from '../Services/get-service.service'
-import { AlertService} from '../Services/alert.service'
-import { Subscription } from 'rxjs';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { CheckBoxComponent } from '../ui/check-box/check-box.component';
+import { FilterDateComponent } from '../ui/filter-date/filter-date.component';
+import { FilterDestinationComponent } from '../ui/filter-destination/filter-destination.component';
+import { FilterFromComponent } from '../ui/filter-from/filter-from.component';
+import { FilterQuantityComponent } from '../ui/filter-quantity/filter-quantity.component';
+import { TextInputComponent } from '../ui/text-input/text-input.component';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  @ViewChild(FilterFromComponent) from: any;
+  @ViewChild(FilterDestinationComponent) to: any;
+  @ViewChild(FilterDateComponent) dates: any;
+  @ViewChild(TextInputComponent) duration: any;
+  @ViewChild(FilterQuantityComponent) quantity: any;
+  @ViewChild(CheckBoxComponent) direct: any;
 
-  cuisines :Array<string>
-  ingredintName = ""
-  ingredientsList = ["salt and pepper","salt", "oil","onion"]
-  options = []
-  subscriptions:Array<Subscription> = new Array<Subscription>()
+  ngOnInit() {}
 
-  constructor( private router:Router,private sharedDataService:SharedDataService,private getService:GetServiceService,private alertService:AlertService) { }
-  ngOnDestroy():void {
-    this.subscriptions.forEach( subscription => subscription.unsubscribe())
+  filterForm() {
+    console.log(
+      this.from.getSelectedDest(),
+      this.to.getSelectedDest(),
+      this.dates.getDate(),
+      this.duration.getValue(),
+      this.quantity.getSelectedQuantity()
+    );
   }
-
-  ngOnInit(): void {
-    this.getService.getCuisine()
-    this.subscriptions.push(this.getService.onGetCuisineResponse.subscribe(
-      data => this.cuisines = data.cuisines
-    ))
-    this.subscriptions.push(this.getService.onGetIngredientsResponse.subscribe(
-      data => this.options = this.ingredientsList = data.ingredient
-    ))
-    this.subscriptions.push(this.getService.onUpdateCuisineResponse.subscribe(
-      data => this.cuisines = data.cuisines
-    ))
-    //this.cuisines = ["asia","USA","france","dekel"]
-    //this.options = this.ingredientsList
-    this.subscriptions.push(this.getService.onAppResponseError.subscribe(
-      response => this.alertService.openModal("Travel With Food",response.message)
-    ))
-  }
-  selectEvent(item) {
-    this.ingredintName = item
-  }
-  onChangeSearch(val: string) {
-    this.getService.getIngredients(val)
-    this.ingredintName = val
-    //this.options = this.options.filter(value => value.toLowerCase().contain(val))
-  }
-  updateCuisine(): void{
-    this.getService.getCuisineByIngredient(this.ingredintName)
-  }
-
-  onChooseCuisine(cuisine:string):void {
-    this.sharedDataService.changeCuisine(cuisine)
-    this.router.navigate(["ingredientChoose"])
-  }
-
-
 }

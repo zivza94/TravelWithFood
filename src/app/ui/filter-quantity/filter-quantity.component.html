@@ -1,0 +1,3 @@
+<pt-form-group (messageEvent)="clearSelectedQuantity()" left={{title}} right="Clear" svg="clear" path="clear">
+    <pt-select (messageEvent)="getSelectedQuantity()" class="multi-select" [chips]="getQuantitiesList()"></pt-select>
+</pt-form-group>
